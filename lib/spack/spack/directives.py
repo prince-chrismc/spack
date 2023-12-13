@@ -536,7 +536,7 @@ def conflicts(conflict_spec, when=None, msg=None):
             return
 
         # Save in a list the conflicts and the associated custom messages
-        when_spec_list = pkg.conflicts.setdefault(conflict_spec, [])
+        when_spec_list = pkg.conflicts.setdefault(spack.spec.Spec(conflict_spec), [])
         msg_with_name = f"{pkg.name}: {msg}" if msg is not None else msg
         when_spec_list.append((when_spec, msg_with_name))
 
@@ -585,7 +585,8 @@ def extends(spec, type=("build", "run"), **kwargs):
 
         _depends_on(pkg, spec, when=when, type=type)
         spec_obj = spack.spec.Spec(spec)
-        pkg.extendees[spec_obj.name] = (spec_obj, kwargs)
+
+        pkg.extendees[spec_obj.name] = (spec_obj, {"when": when, "type": type})
 
     return _execute_extends
 
@@ -958,7 +959,9 @@ def requires(*requirement_specs, policy="one_of", when=None, msg=None):
             return
 
         # Save in a list the requirements and the associated custom messages
-        when_spec_list = pkg.requirements.setdefault(tuple(requirement_specs), [])
+        when_spec_list = pkg.requirements.setdefault(
+            tuple(spack.spec.Spec(r) for r in requirement_specs), []
+        )
         msg_with_name = f"{pkg.name}: {msg}" if msg is not None else msg
         when_spec_list.append((when_spec, policy, msg_with_name))
 
