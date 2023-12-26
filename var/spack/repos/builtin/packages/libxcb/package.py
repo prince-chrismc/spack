@@ -44,6 +44,10 @@ class Libxcb(AutotoolsPackage):
 
         return url.format(version)
 
+    when("+use_spack_interpreter")
+    def setup_build_environment(self, env):
+        env.set("PYTHON", sys.executable)
+
     def configure_args(self):
         config_args = []
 
