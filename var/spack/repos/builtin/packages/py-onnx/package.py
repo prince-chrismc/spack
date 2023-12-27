@@ -37,7 +37,8 @@ class PyOnnx(PythonPackage):
     depends_on("python@3.8:", type=("build", "run"), when="@1.15:")
 
     depends_on("py-setuptools", type="build")
-    depends_on("py-setuptools@61:", type="build", when="@1.15:")
+    # @61: in pyproject.toml when @1.15:, but upgraded to @64: due to editable_mode
+    depends_on("py-setuptools@64:", type="build", when="@1.15:")
 
     depends_on("protobuf")
     depends_on("py-protobuf+cpp", type=("build", "run"))
